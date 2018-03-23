@@ -1,16 +1,21 @@
 # WordCount
 
 ----------------
-##环境
+环境
 JRE 1.8及以上版本
 
-##使用方法
+使用方法
 
 wc.exe -c file.c (-o result.txt) (-e escapeWordList.txt)
+
 wc.exe -w file.c (-o result.txt) (-e escapeWordList.txt)
+
 wc.exe -l file.c (-o result.txt) (-e escapeWordList.txt)
+
 wc.exe -a file.c (-o result.txt) (-e escapeWordList.txt)
+
 wc.exe -s file.c (-o result.txt) (-e escapeWordList.txt)
+
 -c 统计字符数 
 -w 统计单词数 
 -l 统计行数 
