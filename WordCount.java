@@ -14,45 +14,27 @@ public class WordCount{
     List<File> fileList;
     public static void main(String args[]) throws Exception
     {
-        boolean hasOptionA = false;
-        boolean hasOptionC = false;;
-        boolean hasOptionW = false;;
-        boolean hasOptionL = false;;
-        boolean hasOptionS = false;;
-        boolean hasOptionE = false;;
-        boolean hasOptionO = false;;
+       Scanner input = new Scanner(System.in);
+  System.out.println("please input path:");
+  String path = input.next();
+  int countChar = 0;
+  int countword = 0;
+  int countline = 0;
+  InputStreamReader isr = new InputStreamReader(new FileInputStream(path));
 
-        String fileParameter = "";
-        String sParameter = "";
-        String oParameter = "";
-        String eParameter = "";
-        for(int i = 0; i < args.length; i++)
-        {
-            String str = args[i];
-
-            if (str.equals("-a")) hasOptionA = true;
-            if (str.equals("-c")) hasOptionC = true;
-            if (str.equals("-w")) hasOptionW = true;
-            if (str.equals("-l")) hasOptionL = true;
-            if (str.equals("-s")) hasOptionS = true;
-
-            if (str.equals("-e"))
-            {
-                hasOptionE = true;
-                eParameter = args[i+1];
-                i++;
-            }
-            if (str.equals("-o"))
-            {
-                hasOptionO = true;
-                oParameter = args[i+1];
-                i++;
-            }
-            else
-            {
-                fileParameter = str;
-            }
-        }
+  BufferedReader br = new BufferedReader(isr);
+  while(br.read()!=-1)
+  {
+   String s = br.readLine();
+   countChar += s.length();
+   countword += s.split(" ").length;
+   countline++;
+  isr.close();//关闭文件
+  System.out.println("char cont "+countChar);
+  System.out.println("word count "+countword );
+  System.out.println("line count "+countline); 
+  }
+}
 
 
         WordCount wordCount = new WordCount();
@@ -72,64 +54,126 @@ public class WordCount{
             }
         }
 
-
-        if(hasOptionS){
-
-            wordCount.getFileList(fileParameter);
-
-            for(File f : wordCount.fileList) {
-                System.out.println(f.getAbsolutePath());
-
-                wordCount.read(f.getAbsolutePath());
-                wordCount.fn = f.getName();
-                if (hasOptionC) {
-                    System.out.println(wordCount.fn + "," + "字符数：" + wordCount.countChar());
-                }
-
-                if (hasOptionW && !hasOptionE) {
-                    System.out.println(wordCount.fn + "," + "单词数：" + wordCount.countWord());
-                }
-
-                if (hasOptionL) {
-                    System.out.println(wordCount.fn + "," + "行数：" + wordCount.countLine());
-                }
-
-                if (hasOptionE) {
-                    wordCount.setStopListFile(eParameter);
-                    System.out.println(wordCount.fn + "," + "单词数：" + wordCount.countWStopList());
-                }
-                if (hasOptionA) {
-                    System.out.printf("%s,代码行/空行/注释行：%d/%d/%d\n", wordCount.fn, wordCount.countCodeLine(), wordCount.countEmptyLine(), wordCount.countCommentLine());
-                }
-            }
-
-        }
-        else
+  public static boolean ContainsStr(String s1, String s2)
+{
+    if(s1.indexOf(s2)>=0)
+    {
+        return true;
+    } else{
+        return false;
+    }
+}
+    public static void main(String[] args) throws IOException
+    {
+   // write your code here
+         File f=new File("e:/code.txt");
+        FileReader fr=new FileReader(f);
+        BufferedReader br=new BufferedReader(fr);
+        String strRead=null;
+        List<String> lstLines=new ArrayList<String>();
+        int nLineNum =1;
+        while((strRead=br.readLine())!=null)
         {
-            wordCount.fn = fileParameter;
-            File root = new File("");
-            wordCount.read(root.getAbsolutePath() + "\\" + wordCount.fn);
-            if (hasOptionA) {
-                System.out.printf("%s,代码行/空行/注释行：%d/%d/%d", wordCount.fn, wordCount.countCodeLine(), wordCount.countEmptyLine(), wordCount.countCommentLine());
-            }
-            if (hasOptionC) {
-                System.out.println(wordCount.fn + "," + "字符数：" + wordCount.countChar());
-            }
-
-            if (hasOptionW && !hasOptionE) {
-                System.out.println(wordCount.fn + "," + "单词数：" + wordCount.countWord());
-            }
-
-            if (hasOptionL) {
-                System.out.println(wordCount.fn + "," + "行数：" + wordCount.countLine());
-            }
-
-            if (hasOptionE) {
-                wordCount.setStopListFile(eParameter);
-                System.out.println(wordCount.fn + "," + "单词数：" + wordCount.countWStopList());
-            }
-
+            lstLines.add(strRead);
         }
+        System.out.println("请输入要查询的单词");
+        Scanner sc=new Scanner(System.in);
+        String strWord=sc.nextLine();
+        for(String strTemp:lstLines)
+        {
+            boolean b=ContainsStr(strTemp,strWord);
+            if(b)
+            {
+                System.out.println(nLineNum+":"+strTemp);
+            }
+            nLineNum++;
+        }
+    }
+}
+        else
+        {String file = CodeCounter.class.getResource("/").getFile();  
+        String path = file.replace("target/test-classes", "src");  
+  
+        ArrayList<File> al = getFile(new File(path));  
+        for (File f : al) {  
+            if (f.getName().matches(".*\\.java$")){ // 匹配java格式的文件  
+                count(f);  
+                System.out.println(f);  
+            }  
+        }  
+        System.out.println("统计文件：" + files);  
+        System.out.println("代码行数：" + codeLines);  
+        System.out.println("注释行数：" + commentLines);  
+        System.out.println("空白行数：" + blankLines);  
+    }  
+      
+    static long files = 0;  
+    static long codeLines = 0;  
+    static long commentLines = 0;  
+    static long blankLines = 0;  
+    static ArrayList<File> fileArray = new ArrayList<File>();  
+      
+    /** 
+     * 获得目录下的文件和子目录下的文件 
+     * @param f 
+     * @return 
+     */  
+    public static ArrayList<File> getFile(File f) {  
+        File[] ff = f.listFiles();  
+        for (File child : ff) {  
+            if (child.isDirectory()) {  
+                getFile(child);  
+            } else  
+                fileArray.add(child);  
+        }  
+        return fileArray;  
+  
+    }  
+  
+    /** 
+     * 统计方法 
+     * @param f 
+     */  
+    private static void count(File f) {  
+        BufferedReader br = null;  
+        boolean flag = false;  
+        try {  
+            br = new BufferedReader(new FileReader(f));  
+            String line = "";  
+            while ((line = br.readLine()) != null) {  
+                line = line.trim(); // 除去注释前的空格  
+                if (line.matches("^[ ]*$")) { // 匹配空行  
+                    blankLines++;  
+                } else if (line.startsWith("//")) {  
+                    commentLines++;  
+                } else if (line.startsWith("/*") && !line.endsWith("*/")) {  
+                    commentLines++;  
+                    flag = true;  
+                } else if (line.startsWith("/*") && line.endsWith("*/")) {  
+                    commentLines++;  
+                } else if (flag == true) {  
+                    commentLines++;  
+                    if (line.endsWith("*/")) {  
+                        flag = false;  
+                    }  
+                } else {  
+                    codeLines++;  
+                }  
+            
+            files++;  
+        } catch (FileNotFoundException e) {  
+            e.printStackTrace();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        } finally {  
+            if (br != null) {  
+                try {  
+                    br.close();  
+                    br = null;  
+                } catch (IOException e) {  
+                    e.printStackTrace();  
+                }  
+
     }
     WordCount()
     {
@@ -228,115 +272,80 @@ public class WordCount{
         return lines.length - countCommentLine() - countEmptyLine();
     }
 
-    public int countEmptyLine()
-    {
-        if(buffer.length() == 0)    return 0;
-        String regex = "[\\s]*[\\S]?[\\s]*";
-        Pattern emptyLinePattern = Pattern.compile(regex);
+String file = CodeCounter.class.getResource("/").getFile();  
+        String path = file.replace("target/test-classes", "src");  
+  
+        ArrayList<File> al = getFile(new File(path));  
+        for (File f : al) {  
+            if (f.getName().matches(".*\\.java$")){ // 匹配java格式的文件  
+                count(f);  
+                System.out.println(f);  
+            }  
+        }  
+        System.out.println("统计文件：" + files);  
+        System.out.println("代码行数：" + codeLines);  
+        System.out.println("注释行数：" + commentLines);  
+        System.out.println("空白行数：" + blankLines);  
+    }  
+      
+    static long files = 0;  
+    static long codeLines = 0;  
+    static long commentLines = 0;  
+    static long blankLines = 0;  
+    static ArrayList<File> fileArray = new ArrayList<File>();  
+   
+       
+    public static ArrayList<File> getFile(File f) {  
+        File[] ff = f.listFiles();  
+        for (File child : ff) {  
+            if (child.isDirectory()) {  
+                getFile(child);  
+            } else  
+                fileArray.add(child);  
+        }  
+        return fileArray;  
+  
+    }  
+  
 
-        String[] lines = buffer.split("\n", -1);
+    private static void count(File f) {  
+        BufferedReader br = null;  
+        boolean flag = false;  
+        try {  
+            br = new BufferedReader(new FileReader(f));  
+            String line = "";  
+            while ((line = br.readLine()) != null) {  
+                line = line.trim(); 
+                if (line.matches("^[ ]*$")) { 
+                    blankLines++;  
+                } else if (line.startsWith("//")) {  
+                    commentLines++;  
+                } else if (line.startsWith("/*") && !line.endsWith("*/")) {  
+                    commentLines++;  
+                    flag = true;  
+                } else if (line.startsWith("/*") && line.endsWith("*/")) {  
+                    commentLines++;  
+                } else if (flag == true) {  
+                    commentLines++;  
+                    if (line.endsWith("*/")) {  
+                        flag = false;  
+                    }  
+                } else {  
+                    codeLines++;  
+                }  
+            }  
+            files++;  
+        } catch (FileNotFoundException e) {  
+            e.printStackTrace();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        } finally {  
+            if (br != null) {  
+                try {  
+                    br.close();  
+                    br = null;  
+                } catch (IOException e) {  
+                    e.printStackTrace();  
+                }  
 
-        Matcher matcher;
-        int result = 0;
-        for(String line : lines)
-        {
-            matcher = emptyLinePattern.matcher(line);
-            if(matcher.matches())
-                result++;
-        }
-        return result;
-
-    }
-
-
-
-    public int countWStopList()
-    {
-        if(buffer.length() == 0)    return 0;
-
-        String[] stopWords = sl.split("[ ]");
-        List<String> stopWordList = Arrays.asList(stopWords);
-        String[] words = buffer.split("[, \t\n]+");
-
-        int result = words.length;
-
-        for(String word : words)
-        {
-            if(stopWordList.contains(word))
-            {
-                result--;
-            }
-        }
-
-        return result;
-    }
-    public int countCommentLine()
-    {
-        if(buffer.length() == 0)    return 0;
-
-        int result = 0;
-        String regex = "([\\S]?/[/*][\\S]*)|\\*/";
-        Pattern commentLinePattern = Pattern.compile(regex);
-        Matcher matcher;
-        String[] lines = buffer.split("\n", -1);
-        for(String line : lines)
-        {
-            matcher = commentLinePattern.matcher(line);
-            if(matcher.matches())
-                result++;
-        }
-        return result;
-    }
-    public void getFileList(String path)
-    {
-        String searchPath = new String();
-        String filePattern = new String();
-
-        Pattern single = Pattern.compile("\\*\\.\\S+");
-        Matcher singleMatcher = single.matcher(path);
-
-        Pattern pathPattern = Pattern.compile("\\S+\\*\\.\\S+");
-        Matcher pathMatcher = pathPattern.matcher(path);
-
-        if(singleMatcher.matches())
-        {
-            searchPath = (new File("").getAbsolutePath());
-            filePattern = path.substring(path.indexOf('*'));
-        }
-        if(pathMatcher.matches())
-        {
-            searchPath = path.substring(0, path.indexOf('*'));
-            filePattern = path.substring(path.indexOf('*'));
-        }
-
-        File root = new File(searchPath);
-
-        for(File fl : root.listFiles())
-        {
-
-            if(fl.isFile())
-            {
-                if(Pattern.compile(filePattern.replace("*.", "[a-zA-z0-9]+\\.")).matcher(fl.getName()).matches())
-                    fileList.add(fl);
-
-            }
-            if(fl.isDirectory())
-            {
-                String temp = fl.getAbsolutePath() + "\\" + filePattern;
-                System.out.println(temp);
-                getFileList(temp);
-            }
-
-
-        }
-
-    }
-
-
-
-
-
-
-
-
-}
+                    }
